@@ -47,7 +47,8 @@ class AssigmentController {
             throw new Error(err);
         }
     }
-        async checkAssignments(assignment_id) {
+        
+    async checkAssignments(assignment_id) {
             try {
                 const currAssignment=await Assignment.findById(assignment_id)
                 const submissions=currAssignment.submissions
@@ -144,10 +145,8 @@ class AssigmentController {
             throw new Error(err);
         }
     }
-
-
-
-        async checkPlagiarism(language,newAssignments,stringArr) {
+    
+    async checkPlagiarism(language,newAssignments,stringArr) {
             try {
                 
                 var assignments=newAssignments;
@@ -186,59 +185,102 @@ class AssigmentController {
             } catch (err) {
                 throw new Error(err);
             }
-        }
+    }
 
-    async checkCode(details) {
-        try {
-            let code = details.code; 
-            let language = details.language; 
-            let input = details.input; 
-            console.log(code+" "+ language+" "+ input)
-            if (language === "Python") { 
-                language = "python3"
-            }
-            if (language === "C++") { 
-                language = "cpp"
-            }
-            if (language === "Dart") { 
-                language = "dart"
-            }
-            if (language === "PHP") { 
-                language = "php"
-            }
-            if (language === "SQL") { 
-                language = "sql"
-            } 
+    // async checkCode(details) {
+    //     try {
+    //         let code = details.code; 
+    //         let language = details.language; 
+    //         let input = details.input; 
+    //         console.log(code+" "+ language+" "+ input)
+    //         if (language === "Python") { 
+    //             language = "python3"
+    //         }
+    //         if (language === "C++") { 
+    //             language = "cpp"
+    //         }
+    //         if (language === "Dart") { 
+    //             language = "dart"
+    //         }
+    //         if (language === "PHP") { 
+    //             language = "php"
+    //         }
+    //         if (language === "SQL") { 
+    //             language = "sql"
+    //         } 
           
-            let data3 = { 
-                language: language, 
-                version: "5",
-                code: code, 
-                input: input,
-            }; 
-            const options = {
-                method: 'POST',
-                url: 'https://online-code-compiler.p.rapidapi.com/v1/',
-                headers: {
-                    'content-type': 'application/json',
-                    'X-RapidAPI-Key': '5edb51025fmsh73e7ca28e6f3c9bp106cf1jsna23b0c600ed9',
-                    'X-RapidAPI-Host': 'online-code-compiler.p.rapidapi.com'
-                },
-                data : data3
-              };
+    //         let data3 = { 
+    //             language: language, 
+    //             version: "5",
+    //             code: code, 
+    //             input: input,
+    //         }; 
+    //         const options = {
+    //             method: 'POST',
+    //             url: 'https://online-code-compiler.p.rapidapi.com/v1/',
+    //             headers: {
+    //                 'content-type': 'application/json',
+    //                 'X-RapidAPI-Key': '5edb51025fmsh73e7ca28e6f3c9bp106cf1jsna23b0c600ed9',
+    //                 'X-RapidAPI-Host': 'online-code-compiler.p.rapidapi.com'
+    //             },
+    //             data : data3
+    //           };
 
-              const response = await Axios(options);
-              // Return the output if the request was successful
+    //           const response = await Axios(options);
+    //           // Return the output if the request was successful
      
               
-              return response.data.output;
+    //           return response.data.output;
          
             
-        } catch (err) {
-               console.error("Compiler API Error:", err.response?.data || err.message)
-            throw new Error(err);
-        }
+    //     } catch (err) {
+    //            console.error("Compiler API Error:", err.response?.data || err.message)
+    //         throw new Error(err);
+    //     }
+    // }
+
+    async checkCode(details) {
+    try {
+        let code = details.code; 
+        let language = details.language.toLowerCase(); 
+        let input = details.input || "";
+
+        if (language === "c++") language = "cpp";
+        if (language === "python") language = "python3";
+        if (language === "c") language = "c";
+        if (language === "java") language = "java";
+        if (language === "javascript") language = "javascript";
+
+       const payload = {
+    language: language,
+    version: "*",
+    files: [{
+        name: "main." + (language === "cpp" ? "cpp" : "txt"),
+        content: code
+    }],
+    stdin: input
+};
+
+
+        console.log("Payload being sent to Piston:", JSON.stringify(payload));
+
+        const response = await Axios.post(
+            "https://emkc.org/api/v2/piston/execute",
+            payload,
+            {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }
+        );
+
+        return response.data.run.output;
+
+    } catch (err) {
+        console.error("Compiler API Error:", err.response?.data || err.message);
+        throw new Error("Code execution failed");
     }
+}
     
         async addSubmission(submission, assignment_id) {
             try {
