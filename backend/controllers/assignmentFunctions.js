@@ -1,6 +1,6 @@
 const Assignment = require("../models/assignmentModel"); // Assuming your user model is exported as User
-const {fetchTextData,compareStrings} = require ("../functions/fetchTextFromUrl.js");
-const {bakersDup} = require ("../functions/plagiagrismFunc.js");
+const {fetchTextData,compareStrings} = require ("../Utils/fetchTextFromUrl.utils.js");
+const {bakersDup} = require ("../Utils/plagiagrismFunc.utils.js");
 
 const Axios = require('axios');
 const User = require("../models/userModel.js");

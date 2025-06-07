@@ -1,7 +1,7 @@
 const express = require("express");
 const assigmentRouter = express.Router();
 const AssignmentController = require("../controllers/assignmentFunctions.js");
-const fetchTextData = require("../functions/fetchTextFromUrl.js");
+const fetchTextData = require("../Utils/fetchTextFromUrl.utils.js");
 const multer = require("multer");
 const { v2: cloudinary } = require("cloudinary");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
