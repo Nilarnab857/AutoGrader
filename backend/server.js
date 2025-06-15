@@ -7,6 +7,7 @@ const _ = require("lodash");
 const cors = require("cors");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const genAI = new GoogleGenerativeAI("AIzaSyD_-BM_UUFlX7Zr3aZ3thWH5YkhjDS2R8w");
+require('dotenv').config()
 
 const app = express();
 app.use(express.json());
