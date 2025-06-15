@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const assigmentRouter = express.Router();
 const AssignmentController = require("../controllers/assignmentFunctions.js");
@@ -9,6 +10,7 @@ const fetch = require("node-fetch");
 const User = require("../models/userModel.js");
 const Assignment = require("../models/assignmentModel.js");
 const UserController = require("../controllers/userFunctions.js");
+
 
 assigmentRouter.post("/addNewAssignment", async (req, res) => {
   try {
@@ -125,9 +127,9 @@ assigmentRouter.get("/checkAssignments/:assignmentId", async (req, res) => {
 // Assume fetchTextData is called with a URL retrieved from MongoDB
 
 cloudinary.config({
-  cloud_name: "djcojgbvl",
-  api_key: "168575818535696",
-  api_secret: "HdC1jaSpX4yfD9usKQ9ag0EAjbs",
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
 const storage = new CloudinaryStorage({

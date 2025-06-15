@@ -1,13 +1,13 @@
 //IMPORT MODULES
-
+require('dotenv').config()
 const express = require("express");
 const mongoose = require("mongoose");
 const http = require("http");
 const _ = require("lodash");
 const cors = require("cors");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
-const genAI = new GoogleGenerativeAI("AIzaSyD_-BM_UUFlX7Zr3aZ3thWH5YkhjDS2R8w");
-require('dotenv').config()
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_API_KEY);
+
 
 const app = express();
 app.use(express.json());
@@ -19,7 +19,7 @@ const server = http.createServer(app);
 async function initialize() {
   try {
     const url =
-      "mongodb+srv://nilarnab:nilarnab14@cluster0.lte8hc2.mongodb.net";
+      process.env.MONGODB_URL;
     mongoose
       .connect(url)
       .then(() => console.log("Database Connected Successfully"))
@@ -32,7 +32,7 @@ async function initialize() {
 app.post("/generate", async (req, res) => {
   const { prompt } = req.body;
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: process.env.GENERATIVE_AI_MODEL });
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();

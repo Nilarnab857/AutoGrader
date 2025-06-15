@@ -1,3 +1,4 @@
+require('dotenv').config();
 const Assignment = require("../models/assignmentModel"); // Assuming your user model is exported as User
 const {fetchTextData,compareStrings} = require ("../Utils/fetchTextFromUrl.utils.js");
 const {bakersDup} = require ("../Utils/plagiagrismFunc.utils.js");
@@ -265,7 +266,7 @@ class AssigmentController {
         console.log("Payload being sent to Piston:", JSON.stringify(payload));
 
         const response = await Axios.post(
-            "https://emkc.org/api/v2/piston/execute",
+            process.env.PISTON_API_URL,
             payload,
             {
                 headers: {
